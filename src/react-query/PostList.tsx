@@ -1,34 +1,38 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-
-interface Post {
-  id: number;
-  title: string;
-  body: string;
-  userId: number;
-}
+import { useState } from "react";
+import usePost from "../hooks/usePost";
+import React from "react";
 
 const PostList = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [error, setError] = useState('');
+  const pageSize = 5; //untuk menampng berapa isi dalam 1 halaman, bisa pakai state jika ada pilihan brp isinya dlm 1 hlmn
+  const { data, fetchNextPage, isLoading, error, isFetching } = usePost({
+    pageSize,
+  });
 
-  useEffect(() => {
-    axios
-      .get('https://jsonplaceholder.typicode.com/posts')
-      .then((res) => setPosts(res.data))
-      .catch((error) => setError(error));
-  }, []);
-
-  if (error) return <p>{error}</p>;
+  if (isLoading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>;
 
   return (
-    <ul className="list-group">
-      {posts.map((post) => (
-        <li key={post.id} className="list-group-item">
-          {post.title}
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="list-group">
+        {data.pages.map((page) => (
+          <React.Fragment>
+            {page.map((post) => (
+              <li key={post.id} className="list-group-item">
+                {post.title}
+              </li>
+            ))}
+          </React.Fragment>
+        ))}
+      </ul>
+      <div className="d-flex my-3">
+        <button
+          className="btn btn-primary ms-2"
+          onClick={() => fetchNextPage()}
+        >
+          {isFetching ? "Loading..." : "Load More"}
+        </button>
+      </div>
+    </>
   );
 };
 
