@@ -3,28 +3,42 @@ import { useRef } from "react";
 import { Todo } from "../hooks/useTodos";
 import axios from "axios";
 
+interface addTodoContext {
+  previousTodos: Todo[];
+}
+
 const TodoForm = () => {
   const queryClient = useQueryClient();
-  const addTodo = useMutation<Todo, Error, Todo>({
+  const addTodo = useMutation<Todo, Error, Todo, addTodoContext>({
     mutationFn: (todo: Todo) =>
       axios
         .post<Todo>("https://jsonplaceholder.typicode.com/posts", todo)
         .then((res) => res.data),
+    onMutate: (newTodo) => {
+      const previousTodos = queryClient.getQueryData<Todo[]>(["todos"] || []);
+      queryClient.setQueryData<Todo[]>(["todos"], (todos) => [
+        newTodo,
+        ...(todos || []),
+      ]);
+
+      if (ref.current) ref.current.value = "";
+      return { previousTodos };
+    },
+
     onSuccess: (savedTodo, newTodo) => {
       //ada 2 APPROACH
       //APPROACH1 : Invalidate the cache, jadi nnti react-query akan ngefetch lagi trs dpt data baru yg udah terupdate
       // queryClient.invalidateQueries({
       //   queryKey:['todos'] // invalidate cache yg keynya todos
       // })
-
       //APPROACH 2: Update data manual yg tersimpan di cache
-      queryClient.setQueryData<Todo[]>(["todos"], (todos) => [
-        savedTodo,
-        ...(todos || []),
-      ]);
-      if (ref.current) ref.current.value = "";
+      queryClient.setQueryData<Todo[]>(["todos"], (todos) =>
+        todos?.map((todo) => (todo === newTodo ? savedTodo : newTodo))
+      );
     },
+    // onError: (error, newTodo,),
   });
+
   const ref = useRef<HTMLInputElement>(null);
 
   return (
