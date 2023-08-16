@@ -13,7 +13,7 @@ const apiClient = new APIClient<Todo>("/todos");
 const useAddTodo = (onAdd: () => void) => {
   const queryClient = useQueryClient();
   return useMutation<Todo, Error, Todo, AddTodoContext>({
-    mutationFn: apiClient.post()
+    mutationFn: apiClient.post,
     onMutate: (newTodo: Todo) => {
       const previousTodos =
         queryClient.getQueryData<Todo[]>([CACHE_KEY_TODOS]) || []; //context sebeleum mutate
