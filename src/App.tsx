@@ -1,9 +1,10 @@
 import "./App.css";
 import PostList from "./react-query/PostList";
 import TodoList from "./react-query/TodoList";
+import Counter from "./state-management/Counter";
 
 function App() {
-  return <PostList />;
+  return <Counter />;
 }
 
 export default App;
