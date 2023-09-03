@@ -1,5 +1,6 @@
 import React, { Dispatch } from "react";
-import { Task, addDeleteTask } from "../reducers/TaskReducers";
+import { Task, addDeleteTask } from "./TaskProviders";
+
 
 interface TaskActionContext{
     tasks : Task[];
