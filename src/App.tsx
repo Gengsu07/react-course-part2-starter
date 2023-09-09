@@ -1,17 +1,16 @@
 import "./App.css";
-import { AuthProviders } from "./state-management/auth";
+import { Counter } from "./state-management/counter";
 import NavBar from "./state-management/NavBar";
 import { TaskList, TaskProviders } from "./state-management/tasks";
 
 function App() {
   
   return (
-    <AuthProviders>
       <TaskProviders>
+        <Counter/>
         <NavBar/>
         <TaskList/>
       </TaskProviders>
-    </AuthProviders>
   )
 }
 

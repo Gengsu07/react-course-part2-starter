@@ -1,20 +1,21 @@
 import { useReducer } from 'react';
-import counterReducers from './CounterReducer';
+import useCounterStore from './CounterStore';
+
 
 const Counter = () => {
-  const [value, dispacth] = useReducer(counterReducers,0)
-
+  const {counter, increment, reset} = useCounterStore()
+  
   return (
     <div>
-      Counter ({value})
+      Counter ({counter})
       <button
-        onClick={() => dispacth({type:'INCREMENT'})}
+        onClick={() => increment()}
         className="btn btn-primary mx-1"
       >
         Increment
       </button>
       <button
-        onClick={() => dispacth({type:'RESET'})}
+        onClick={() => reset()}
         className="btn btn-primary mx-1"
       >
         Reset
