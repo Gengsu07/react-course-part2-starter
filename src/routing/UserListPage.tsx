@@ -15,9 +15,6 @@ const UserListPage = () => {
           </li>
         ))}
       </ul>
-      <div id="main">
-        <Outlet />
-      </div>
     </>
   );
 };
